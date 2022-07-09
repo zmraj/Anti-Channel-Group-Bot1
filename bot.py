@@ -31,7 +31,7 @@ logging.basicConfig(
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 
-JV_BOT = Client("AntiChannelBot",
+JV_BOT = Client("AntiChannelGroupHelpBot",
                 api_id=Config.API_ID,
                 api_hash=Config.API_HASH,
                 bot_token=Config.BOT_TOKEN)
@@ -50,14 +50,14 @@ async def get_channel_id_from_input(bot, message):
     try:
         a_id = message.text.split(" ",1)[1]
     except:
-        await message.reply_text("Send cmd along with channel id")
+        await message.reply_text("📣 Send cmd along with channel id 📣")
         return False
     if not str(a_id).startswith("-"):
         try:
             a_id = await bot.get_chat(a_id)
             a_id = a_id.id
         except:
-            await message.reply_text("Inavalid channel id")
+            await message.reply_text("❌ Inavalid channel id ❌")
             return False
     return a_id
 
@@ -75,7 +75,7 @@ async def main_handler(bot, message):
     try:
         res = await bot.ban_chat_member(chat_id, a_id)
     except:
-        return await message.reply_text("Promote me as admin, to use me")
+        return await message.reply_text(" 📍 Promote me as 👮‍♀️ admin 👮‍♀️, to use me")
     if res:
         mention = f"@{message.sender_chat.username}" if message.sender_chat.username else message.chat_data.title
         await message.reply_text(text=f"{mention} has been banned.\n\n💡 He can write only with his profile but not through other channels.",
@@ -86,11 +86,11 @@ async def main_handler(bot, message):
 
 @JV_BOT.on_message(filters.command(["start"]) & filters.private)
 async def start_handler(bot, message):
-    await message.reply_text(text="""Hey! Just add me to the chat, and I will block the channels that write to the chat,
+    await message.reply_text(text="""Hey! Just 📌📌 add me to the chat, and I will ❌block the channels❌ that write to the chat,
 
 check /help for more.""",
-                             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Bots Channel", url=f"https://t.me/Universal_Projects"),
-                                                                 InlineKeyboardButton("Support Group", url=f"https://t.me/JV_Community")]]),
+                             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🤖Bots Channel🤖", url=f"https://t.me/DeltaBotsOfficial"),
+                                                                 InlineKeyboardButton("Support Group", url=f"https://t.me/joinchat/RSzvS3qax24wMmN")]]),
                              disable_web_page_preview=True)
 
 @JV_BOT.on_message(filters.command(["help"]) & filters.private)
@@ -102,8 +102,8 @@ async def help_handler(bot, message):
 /show_whitelist : Show all white list channels.
 
 for more help ask at @JV_Community""",
-                             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Bots Channel", url=f"https://t.me/Universal_Projects"),
-                                                                 InlineKeyboardButton("Support Group", url=f"https://t.me/JV_Community")]]),
+                             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🤖Bots Channel🤖", url=f"https://t.me/DeltaBotsOfficial"),
+                                                                 InlineKeyboardButton("Support Group", url=f"https://t.me/joinchat/RSzvS3qax24wMmN")]]),
                              disable_web_page_preview=True)
 
 
@@ -118,7 +118,7 @@ async def cb_handler(bot, query):
         if user.status == "creator" or user.status == "administrator":
             pass
         else:
-            return await query.answer("This Message is Not For You!", show_alert=True)
+            return await query.answer("😎This Message is Not For You!😎", show_alert=True)
         await bot.resolve_peer(an_id)
         res = await query.message.chat.unban_member(an_id)
         chat_data = await bot.get_chat(an_id)
@@ -140,17 +140,17 @@ async def cban_handler(bot, message):
         if not a_id:
             return
         if (await whitelist_check(chat_id, a_id)):
-            return await message.reply_text("Channel Id found in whitelist, so you can't ban this channel")
+            return await message.reply_text("Channel Id 🔍found in whitelist, so you can't ban this channel")
         await bot.resolve_peer(a_id)
         res = await bot.ban_chat_member(chat_id, a_id)
         chat_data = await bot.get_chat(a_id)
         mention = f"@{chat_data.username}" if chat_data.username else chat_data.title
         if res:
-            await message.reply_text(text=f"{mention} has been banned.\n\n💡 He can write only with his profile but not through other channels.",
+            await message.reply_text(text=f"{mention} has been banned.\n\n💡 He can write only with his 🦸‍♂️  profile 🦸‍♂️ but not through other channels.",
                                  reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Unban", callback_data=f"unban_{chat_id}_{a_id}")]]),
                               )
         else:
-            await message.reply_text("Invalid Channel id, 💡check channel id")
+            await message.reply_text("😱 Invalid Channel id, 💡 check channel id 💡")
     except Exception as e:
         print(e)
 
@@ -175,7 +175,7 @@ async def uncban_handler(bot, message):
         if res:
             await message.reply_text(text=f"{mention} has been unbanned by {message.from_user.mention}")
         else:
-            await message.reply_text("Invalid Channel id, 💡check channel id")
+            await message.reply_text("😱 Invalid Channel id, 💡check channel id 💡")
     except Exception as e:
         print(e)
         await message.reply_text(e)
@@ -194,12 +194,12 @@ async def add_whitelist_handler(bot, message):
         if not a_id:
             return
         if (await whitelist_check(chat_id, a_id)):
-            return await message.reply_text("Channel Id already found in whitelist")
+            return await message.reply_text("Channel Id already 🔎 found in whitelist")
         chk,msg = await db.add_chat_list(chat_id, a_id)
         if chk and msg != "":
             await message.reply_text(msg)
         else:
-            await message.reply_text("Something wrong happend")
+            await message.reply_text("Something ❌ wrong ❌ happend")
     except Exception as e:
         print(e)
 
@@ -217,17 +217,17 @@ async def del_whitelist_handler(bot, message):
         if not a_id:
             return
         if not (await whitelist_check(chat_id, a_id)):
-            return await message.reply_text("Channel Id not found in whitelist")
+            return await message.reply_text("Channel Id ⚠️ not found ⚠️ in whitelist")
         chk,msg = await db.del_chat_list(message.chat.id, a_id)
         if chk:
             await message.reply_text(msg)
         else:
-            await message.reply_text("Something wrong happend")
+            await message.reply_text("Something ❌ wrong ❌ happend")
     except Exception as e:
         print(e)
 
 
-@JV_BOT.on_message(filters.command(["show_whitelist"]) & filters.group)
+@JV_BOT.on_message(filters.command(["💡 show_whitelist 💡"]) & filters.group)
 async def del_whitelist_handler(bot, message):
     chat_id = message.chat.id
     user = await bot.get_chat_member(chat_id, message.from_user.id)
@@ -237,9 +237,9 @@ async def del_whitelist_handler(bot, message):
         return
     show_wl = await db.get_chat_list(chat_id)
     if show_wl:
-        await message.reply_text(f"This ids found in whitelist\n\n{show_wl}")
+        await message.reply_text(f"This ids ✅ found in whitelist ✅\n\n{show_wl}")
     else:
-        await message.reply_text("White list not found.")
+        await message.reply_text("White list ⚠️ not found ⚠️.")
 
 if __name__ == "__main__":
     JV_BOT.run()
